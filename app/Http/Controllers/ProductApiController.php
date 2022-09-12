@@ -30,7 +30,7 @@ class ProductApiController extends Controller
      */
     public function store(Request $request)
     {
-
+        sleep(3);
         $request->validate([
             "name" => "required|min:3|max:50",
             "price" => "required|numeric|min:1",
@@ -46,12 +46,14 @@ class ProductApiController extends Controller
         ]);
         $savePhotos = [];
         foreach($request->photos as $key=>$photo){
-            $newN = $photo->getClientOriginalName();
+            $newN = uniqid()."-photo-".$photo->getClientOriginalName();
+            $photo->storeAs("public",$newN);
             $savePhotos[$key] = new Photo(["name"=>$newN]);
         }
         $product->photos()->saveMany($savePhotos);
         return response()->json([
             "message" => "success",
+            "success" => true,
             "product" => new ProductResource($product)
         ],200);
     }

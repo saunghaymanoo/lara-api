@@ -33,7 +33,7 @@ class ProductResource extends JsonResource
             "stock" => $this->stock,
             "stock-status" => $this->stockStatus($this->stock),
             "date" => $this->created_at->format('Y d m'),
-            "time" => $this->created_at->format('h i'),
+            "time" => $this->created_at->format('g:i A'),
             "owner" => new UserResource($this->user),
             "photos" => PhotoResource::collection($this->photos),
         ];
