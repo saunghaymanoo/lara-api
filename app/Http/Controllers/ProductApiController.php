@@ -17,7 +17,7 @@ class ProductApiController extends Controller
      */
     public function index()
     {
-        $products = Product::latest('id')->get();
+        $products = Product::latest('id')->paginate(7)->onEachside(1);
         // return response()->json($products);
         return ProductResource::collection($products);
     }
@@ -82,6 +82,7 @@ class ProductApiController extends Controller
      */
     public function update(Request $request, $id)
     {
+        sleep(3);
         $product = Product::find($id);
         if (is_null($product)) {
             return response()->json(["message" => "Product not found"], 404);
@@ -106,7 +107,11 @@ class ProductApiController extends Controller
         // $product->stock = $request->stock;
 
         $product->update();
-        return response()->json(["message" => "Update Successful"]);
+        return response()->json([
+            "message" => "Update Successful",
+            "product" => $product,
+            "success" => true
+        ]);
     }
 
     /**
@@ -122,6 +127,9 @@ class ProductApiController extends Controller
             return response()->json(["message" => "Product not found"], 404);
         }
         $product->delete();
-        return response()->json(["message" => "Product is deleted"], 204);
+        return response()->json([
+            "message" => "Product is deleted",
+            "success" => true
+        ]);
     }
 }
